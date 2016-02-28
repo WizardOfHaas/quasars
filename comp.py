@@ -6,16 +6,23 @@ from scipy.interpolate import interp1d
 import numpy as np
 import pylab
 
+def movingaverage (values, window):
+    weights = np.repeat(1.0, window)/window
+    sma = np.convolve(values, weights, 'valid')
+    return sma
+
 #List of spectra to read...
 spec_files = [f for f in listdir('data/') if isfile(join('data/', f))]
 
-#Holder for composite spectra
+#Holder for composite spectra and other data
 specs = []
+zs = []
 
 for spec_file in spec_files:
 	#Read in spectral data
 	hdulist = fits.open('data/' + spec_file)
-	spec = hdulist[0].data[1]
+	spec = hdulist[0].data[1]	
+	zs.append(hdulist[0].header['z'])	
 
 	#Normalize
 	spec_max = max(spec)
@@ -35,8 +42,11 @@ for spec in specs:
 
 spec_comp = map(lambda x: x / (len(specs)), spec_sum)
 
-#Linearly smoothe composite
-#spec_comp_intp = interp1d(spec_comp, range(len(spec_comp)))
+#Run moving average on composite
+spec_comp_smooth = movingaverage(spec_comp, 10)
 
-pylab.plot(spec_comp)
+#pylab.plot(spec_comp)
+pylab.plot(spec_comp_smooth)
+pylab.title('QSO Comp Spectra')
+pylab.text(50, 0.1, 'z :~' + str(np.min(zs)) + " - " + str(np.max(zs)))
 pylab.show()
