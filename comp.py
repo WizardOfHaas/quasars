@@ -1,6 +1,7 @@
 from os import listdir
 from os.path import isfile, join
 from astropy.io import fits
+from scipy.interpolate import interp1d
 
 import numpy as np
 import pylab
@@ -26,13 +27,16 @@ for spec_file in spec_files:
 	#Hows it lookin?
 	#pylab.plot(spec_norm)
 
-#Build composite.. probably a better way...
+#Average composite.. probably a better way...
 spec_sum = np.zeros(len(specs[0]) + 10)
 for spec in specs:
 	for i in range(len(spec) - 1):
 		spec_sum[i] += spec[i]
 
 spec_comp = map(lambda x: x / (len(specs)), spec_sum)
+
+#Linearly smoothe composite
+#spec_comp_intp = interp1d(spec_comp, range(len(spec_comp)))
 
 pylab.plot(spec_comp)
 pylab.show()
