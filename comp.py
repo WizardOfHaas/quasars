@@ -21,8 +21,8 @@ zs = []
 for spec_file in spec_files:
 	#Read in spectral data
 	hdulist = fits.open('data/' + spec_file)
-	spec = hdulist[0].data[1]	
-	zs.append(hdulist[0].header['z'])	
+	spec = hdulist[0].data[1]
+	zs.append(hdulist[0].header['z'])
 
 	#Normalize
 	spec_max = max(spec)
@@ -35,7 +35,7 @@ for spec_file in spec_files:
 	#pylab.plot(spec_norm)
 
 #Average composite.. probably a better way...
-spec_sum = np.zeros(len(specs[0]) + 10)
+spec_sum = np.zeros(len(specs[0]) + 100)
 for spec in specs:
 	for i in range(len(spec) - 1):
 		spec_sum[i] += spec[i]
@@ -43,10 +43,10 @@ for spec in specs:
 spec_comp = map(lambda x: x / (len(specs)), spec_sum)
 
 #Run moving average on composite
-spec_comp_smooth = movingaverage(spec_comp, 10)
+spec_comp_smooth = movingaverage(spec_comp, 50)
 
-#pylab.plot(spec_comp)
-pylab.plot(spec_comp_smooth)
+pylab.plot(specs[1], color="black")
+pylab.plot(spec_comp_smooth, color="red")
 pylab.title('QSO Comp Spectra')
 pylab.text(50, 0.1, 'z :~' + str(np.min(zs)) + " - " + str(np.max(zs)))
 pylab.show()
