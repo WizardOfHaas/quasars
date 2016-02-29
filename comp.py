@@ -5,6 +5,7 @@ from scipy.interpolate import interp1d
 
 import numpy as np
 import pylab
+import glob
 
 def movingaverage (values, window):
     weights = np.repeat(1.0, window)/window
@@ -12,7 +13,7 @@ def movingaverage (values, window):
     return sma
 
 #List of spectra to read...
-spec_files = [f for f in listdir('data/') if isfile(join('data/', f))]
+spec_files = glob.glob('data/*.fit')
 
 #Holder for composite spectra and other data
 specs = []
@@ -20,7 +21,7 @@ zs = []
 
 for spec_file in spec_files:
 	#Read in spectral data
-	hdulist = fits.open('data/' + spec_file)
+	hdulist = fits.open(spec_file)
 	spec = hdulist[0].data[1]
 	zs.append(hdulist[0].header['z'])
 
@@ -30,9 +31,6 @@ for spec_file in spec_files:
 
 	#Add to specra list... for later use...
 	specs.append(spec_norm)
-
-	#Hows it lookin?
-	#pylab.plot(spec_norm)
 
 #Average composite.. probably a better way...
 spec_sum = np.zeros(len(specs[0]) + 100)
@@ -46,8 +44,22 @@ spec_comp = map(lambda x: x / (len(specs)), spec_sum)
 spec_comp_smooth = movingaverage(spec_comp, 50)
 spec_comp_norm = spec_comp_smooth * 1/max(spec_comp_smooth)
 
-pylab.plot(specs[3])
+#Generate Max/Min Spectra
+spec_max = np.amax(specs, axis=0)
+spec_min = np.amin(specs, axis=0)
+
+#Average and normalize
+spec_max_smooth = movingaverage(spec_max, 50)
+spec_max_norm = spec_max_smooth * 1/max(spec_max_smooth)
+
+spec_min_smooth = movingaverage(spec_min, 50)
+spec_min_norm = spec_min_smooth * 1/max(spec_min_smooth)
+
+#Lets plot something.. just for looks
+pylab.plot(spec_min_norm, color="green")
+pylab.plot(spec_max_norm, color="blue")
 pylab.plot(spec_comp_norm, color="red")
+
 pylab.title('QSO Comp Spectra')
 pylab.text(50, 0.1, 'z :~' + str(np.min(zs)) + " - " + str(np.max(zs)))
 pylab.show()
