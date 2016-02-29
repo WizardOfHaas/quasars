@@ -45,7 +45,6 @@ spec_comp = map(lambda x: x / (len(specs)), spec_sum)
 #Run moving average on composite
 spec_comp_smooth = movingaverage(spec_comp, 50)
 
-pylab.plot(specs[1], color="black")
 pylab.plot(spec_comp_smooth, color="red")
 pylab.title('QSO Comp Spectra')
 pylab.text(50, 0.1, 'z :~' + str(np.min(zs)) + " - " + str(np.max(zs)))
