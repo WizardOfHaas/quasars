@@ -68,8 +68,6 @@ pylab.plot(spec_sigma_max, color="blue")
 pylab.plot(spec_sigma_min, color="green")
 pylab.plot(spec_comp_norm, color="red")
 
-pylab.plot(specs[0], color="black")
-
 pylab.title('QSO Comp Spectra')
 pylab.text(50, 0.1, 'z :~' + str(np.min(zs)) + " - " + str(np.max(zs)))
 pylab.show()
