@@ -34,30 +34,41 @@ for spec_file in spec_files:
     specs.append(spec_norm)
 
     #Apply moveing average and add to list... for later use...
-    spec_smooth = movingaverage(spec_norm, 3)
+    spec_smooth = movingaverage(spec_norm, 50)
     spec_smooth = spec_smooth * 1/max(spec_smooth)
     specs_norm.append(spec_smooth.tolist())
 
-#Average composite.. probably a better way...
+#Average composite... probably a better way...
 spec_sum = np.zeros(len(specs[0]) + 100)
 for spec in specs:
     for i in range(len(spec) - 1):
         spec_sum[i] += spec[i]
 
-spec_comp = map(lambda x: x / (len(specs)), spec_sum)
+spec_comp = spec_sum / len(specs)
 
 #Run moving average on composite
 spec_comp_smooth = movingaverage(spec_comp, 50)
-spec_comp_norm = spec_comp_smooth * 1/max(spec_comp_smooth)
+spec_comp_norm = spec_comp * 1/max(spec_comp)
 
-#Generate Max/Min Spectra
-spec_max = np.amax(specs_norm, axis=0)
-spec_min = np.amin(specs_norm, axis=0)
+#Get <x^2>
+spec_sum_squares = np.zeros(len(specs[0]) + 100)
+for spec in specs:
+    for i in range(len(spec) - 1):
+        spec_sum_squares[i] += spec[i]**2
+
+spec_mean_squares = spec_sum_squares / len(specs)
+spec_mean_squares_norm = spec_mean_squares * 1/max(spec_mean_squares)
+
+#Calculate Sigmas
+spec_sigma_max = spec_comp_norm + spec_mean_squares_norm
+spec_sigma_min = spec_comp_norm - spec_mean_squares_norm
 
 #Lets plot something.. just for looks
-pylab.plot(spec_min, color="green")
-pylab.plot(spec_max, color="blue")
+pylab.plot(spec_sigma_max, color="blue")
+pylab.plot(spec_sigma_min, color="green")
 pylab.plot(spec_comp_norm, color="red")
+
+pylab.plot(specs[0], color="black")
 
 pylab.title('QSO Comp Spectra')
 pylab.text(50, 0.1, 'z :~' + str(np.min(zs)) + " - " + str(np.max(zs)))
