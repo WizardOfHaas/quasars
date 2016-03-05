@@ -23,7 +23,7 @@ zs = []
 for spec_file in spec_files:
     #Read in spectral data
     hdulist = fits.open(spec_file)
-    spec = hdulist[0].data[1]
+    spec = hdulist[0].data[0]
 
     zs.append(hdulist[0].header['z'])
 
@@ -61,7 +61,7 @@ spec_mean_squares = spec_sum_squares / len(specs)
 spec_mean_squares_norm = spec_mean_squares * 1/max(spec_mean_squares)
 
 #Calculate Sigmas
-sigma = np.sqrt(spec_mean_squares_norm - spec_comp_norm**2)
+sigma = spec_mean_squares_norm - spec_comp_norm**2
 spec_sigma_max = spec_comp_norm + sigma
 spec_sigma_min = spec_comp_norm - sigma
 
