@@ -71,7 +71,3 @@ pylab.plot(spec_comp_norm, color="red")
 pylab.title('QSO Comp Spectra')
 pylab.text(50, 0.1, 'z :~' + str(np.min(zs)) + " - " + str(np.max(zs)))
 pylab.show()
- 
- #hello friend
- #we meet again..
- 
