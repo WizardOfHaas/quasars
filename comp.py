@@ -13,7 +13,7 @@ def movingaverage (values, window):
     return sma
 
 #List of spectra to read...
-spec_files = glob.glob('data/*.fit')
+spec_files = glob.glob('data/*.fits')
 
 #Holder for composite spectra and other data
 specs = []
@@ -23,9 +23,13 @@ zs = []
 for spec_file in spec_files:
     #Read in spectral data
     hdulist = fits.open(spec_file)
-    spec = hdulist[0].data[0]
 
-    zs.append(hdulist[0].header['z'])
+    #print hdulist[2].data[0]
+    #exit()
+
+    spec = hdulist[1].data[0]
+
+    #zs.append(hdulist[0].header['z'])
 
     #Normalize
     spec_max = max(spec)
@@ -71,5 +75,5 @@ pylab.plot(spec_sigma_min, color="green")
 pylab.plot(spec_comp_norm, color="red")
 
 pylab.title('QSO Comp Spectra')
-pylab.text(50, 0.1, 'z :~' + str(np.min(zs)) + " - " + str(np.max(zs)))
+#pylab.text(50, 0.1, 'z :~' + str(np.min(zs)) + " - " + str(np.max(zs)))
 pylab.show()
