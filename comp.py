@@ -33,7 +33,7 @@ for spec_file in spec_files:
     spec = list(hdulist[1].data['flux'])
 
     #Add z shift to list
-    zs.append(hdulist[2].data['Z'])
+    #zs.append(hdulist[2].data['Z'])
 
     #Add to specra list... for later use...
     specs.append(spec)
@@ -81,5 +81,5 @@ pylab.plot(sigma_min_norm, color="green")
 pylab.plot(spec_comp_norm, color="red")
 
 pylab.title('QSO Comp Spectra')
-pylab.text(50, 0.1, 'z :~' + str(np.min(zs)) + " - " + str(np.max(zs)))
+#pylab.text(50, 0.1, 'z :~' + str(np.min(zs)) + " - " + str(np.max(zs)))
 pylab.show()
