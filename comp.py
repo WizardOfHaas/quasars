@@ -3,6 +3,7 @@ from os.path import isfile, join
 from astropy.io import fits
 from scipy.interpolate import interp1d
 
+import sys
 import numpy as np
 import pylab
 import glob
@@ -16,7 +17,8 @@ def normalize (a):
     return a / max(a)
 
 #List of spectra to read...
-spec_files = glob.glob('data/*.fits')
+#spec_files = glob.glob(sys.argv[1])
+spec_files = sys.argv[1:-1]
 
 #Holder for composite spectra and other data
 specs = []
@@ -44,7 +46,7 @@ for spec in specs:
     for i in range(len(spec) - 1):
         spec_sum[i] += spec[i]
 
-spec_comp = spec_sum / len(specs)
+spec_comp = normalize(spec_sum / len(specs))
 
 #Run moving average on composite
 #spec_comp_smooth = movingaverage(spec_comp, 50)
@@ -59,15 +61,16 @@ for spec in specs:
 spec_mean_squares = spec_sum_squares / len(specs)
 
 #Calculate Sigmas
-sigma = spec_mean_squares - spec_comp**2
+sigma = normalize(spec_mean_squares - spec_comp**2)
 spec_sigma_max = spec_comp + sigma
 spec_sigma_min = spec_comp - sigma
 
+#Normalize to spec_sigma_max
+
 #Lets plot something.. just for looks
-#pylab.plot(normalize(spec_sigma_max), color="blue")
-#pylab.plot(normalize(spec_sigma_min), color="green")
-pylab.plot(normalize(spec_comp), color="red")
-pylab.plot(normalize(sigma))
+pylab.plot(spec_sigma_max, color="blue")
+pylab.plot(spec_sigma_max, color="green")
+pylab.plot(spec_comp, color="red")
 
 pylab.title('QSO Comp Spectra')
 pylab.text(50, 0.1, 'z :~' + str(np.min(zs)) + " - " + str(np.max(zs)))
