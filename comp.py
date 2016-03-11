@@ -70,7 +70,6 @@ sigma_max = spec_comp + sigma
 sigma_min = spec_comp - sigma
 
 #Normalize to spec_sigma_max
-
 sigma_max_norm = sigma_max / max(sigma_max)
 sigma_min_norm = sigma_min / max(sigma_max)
 spec_comp_norm = spec_comp / max(sigma_max)
@@ -79,6 +78,14 @@ spec_comp_norm = spec_comp / max(sigma_max)
 pylab.plot(sigma_max_norm, color="blue")
 pylab.plot(sigma_min_norm, color="green")
 pylab.plot(spec_comp_norm, color="red")
+
+#Output fits
+tbhdu = fits.BinTableHDU.from_columns([
+    fits.Column(name='spec_comp_norm', format='E', array=spec_comp_norm),
+    fits.Column(name='sigma_max_norm', format='E', array=sigma_max_norm),
+    fits.Column(name='sigma_min_norm', format='E', array=sigma_min_norm)
+])
+tbhdu.writeto('table.fits')
 
 pylab.title('QSO Comp Spectra')
 #pylab.text(50, 0.1, 'z :~' + str(np.min(zs)) + " - " + str(np.max(zs)))
