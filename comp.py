@@ -38,6 +38,10 @@ for spec_file in spec_files:
     #Add to specra list... for later use...
     specs.append(spec)
 
+    del spec
+
+    hdulist.close()
+
 max_entries = max(map(len, specs))
 
 #Average composite... probably a better way...
