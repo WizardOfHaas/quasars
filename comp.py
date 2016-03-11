@@ -62,15 +62,19 @@ spec_mean_squares = spec_sum_squares / len(specs)
 
 #Calculate Sigmas
 sigma = normalize(spec_mean_squares - spec_comp**2)
-spec_sigma_max = spec_comp + sigma
-spec_sigma_min = spec_comp - sigma
+sigma_max = spec_comp + sigma
+sigma_min = spec_comp - sigma
 
 #Normalize to spec_sigma_max
 
+sigma_max_norm = sigma_max / max(sigma_max)
+sigma_min_norm = sigma_min / max(sigma_max)
+spec_comp_norm = spec_comp / max(sigma_max)
+
 #Lets plot something.. just for looks
-pylab.plot(spec_sigma_max, color="blue")
-pylab.plot(spec_sigma_max, color="green")
-pylab.plot(spec_comp, color="red")
+pylab.plot(sigma_max_norm, color="blue")
+pylab.plot(sigma_min_norm, color="green")
+pylab.plot(spec_comp_norm, color="red")
 
 pylab.title('QSO Comp Spectra')
 pylab.text(50, 0.1, 'z :~' + str(np.min(zs)) + " - " + str(np.max(zs)))
