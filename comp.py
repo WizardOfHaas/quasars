@@ -30,7 +30,7 @@ for spec_file in spec_files:
     hdulist = fits.open(spec_file)
 
     #Extract spectra
-    spec = hdulist[1].data['flux']
+    spec = list(hdulist[1].data['flux'])
 
     #Add z shift to list
     zs.append(hdulist[2].data['Z'])
@@ -38,8 +38,8 @@ for spec_file in spec_files:
     #Add to specra list... for later use...
     specs.append(spec)
 
+    #GC by hand.. damn snake
     del spec
-
     hdulist.close()
 
 max_entries = max(map(len, specs))
