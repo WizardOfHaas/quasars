@@ -50,6 +50,7 @@ for spec in specs:
     for i in range(len(spec) - 1):
         spec_sum[i] += spec[i]
 
+spec_comp_raw = spec_sum / len(specs)
 spec_comp = normalize(spec_sum / len(specs))
 
 #Run moving average on composite
@@ -82,6 +83,7 @@ pylab.plot(spec_comp_norm, color="red")
 #Output fits
 tbhdu = fits.BinTableHDU.from_columns(
     [
+        fits.Column(name='spec_comp_raw', format='E', array=spec_comp_raw),
         fits.Column(name='spec_comp', format='E', array=spec_comp),
         fits.Column(name='sigma_max', format='E', array=sigma_max),
         fits.Column(name='sigma_min', format='E', array=sigma_min),

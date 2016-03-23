@@ -21,11 +21,12 @@ comp_file = sys.argv[1]
 spec_files = sys.argv[2:-1]
 
 #Read in composite...
-spec_comp = fits.open(comp_file)
+comp = fits.open(comp_file)
+spec_comp = comp[1].data
 
 #Holder for composite spectra and other data
 specs = []
-specs_norm = []
+specs_diff = []
 zs = []
 
 for spec_file in spec_files:
@@ -38,9 +39,21 @@ for spec_file in spec_files:
     #Add z shift to list
     #zs.append(hdulist[2].data['Z'])
 
+    #Calculate deltas...
+    min_entries = max(map(len, [spec, spec_comp['spec_comp_raw']]))
+    spec_diff = spec - list(spec_comp)[0:min_entries]
+
     #Add to specra list... for later use...
     specs.append(spec)
+    specs_diff.append(spec_diff)
 
     #GC by hand.. damn snake
     del spec
     hdulist.close()
+
+#pylab.plot(spec_comp['sigma_max_norm'], color="black")
+#pylab.plot(spec_comp['spec_comp_norm'], color="black")
+#pylab.plot(spec_comp['sigma_min_norm'], color="black")
+pylab.plot(spec_comp['spec_comp_raw'])
+pylab.plot(specs[2])
+pylab.show()
