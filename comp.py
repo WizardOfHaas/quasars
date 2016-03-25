@@ -26,12 +26,14 @@ zs = []
 
 for spec_file in spec_files:
     spec = []
-    with open(spec_file) as f:
-        for line in f:
-            spec.append(line.split(" ")[1])
+    with open(spec_file) as f: #Grab the file...
+        for line in f: #Line by line...
+            spec.append(line.split(" ")) #Split it up..
+    spec = list(map(list, zip(*spec))) #And then transpose it
     specs.append(spec)
 
 for spec in specs:
-    pylab.plot(spec)
+    pylab.plot(spec[0])
+    pylab.plot(spec[1])
 
 pylab.show()
