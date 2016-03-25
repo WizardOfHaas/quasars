@@ -21,8 +21,6 @@ spec_files = sys.argv[1:]
 
 #Holder for composite spectra and other data
 specs = []
-specs_norm = []
-zs = []
 
 for spec_file in spec_files:
     spec = []
@@ -32,8 +30,20 @@ for spec_file in spec_files:
     spec = list(map(list, zip(*spec))) #And then transpose it
     specs.append(spec)
 
+#Generate the average
+specs_sum = np.zeros(1760)
+specs_sum_squares = np.zeros(1760)
 for spec in specs:
-    pylab.plot(spec[0])
+    for i in range(len(spec[1])):
+        specs_sum[i] += float(spec[1][i])
+        specs_sum_squares[i] += float(spec[1][i])**2
+
+specs_mean = specs_sum / len(specs)
+specs_mean_squares = specs_sum_squares / len(specs)
+
+for spec in specs:
     pylab.plot(spec[1])
+
+pylab.plot(specs_mean)
 
 pylab.show()
