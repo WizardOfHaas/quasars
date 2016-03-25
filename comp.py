@@ -17,10 +17,7 @@ def normalize (a):
     return a / max(a)
 
 #List of spectra to read...
-spec_files = sys.argv[1:-1]
-
-print spec_files
-exit()
+spec_files = sys.argv[1:]
 
 #Holder for composite spectra and other data
 specs = []
