@@ -30,7 +30,7 @@ for spec_file in spec_files:
     spec = list(map(list, zip(*spec))) #And then transpose it
     specs.append(spec)
 
-#Generate the average
+#Generate the average(s)
 specs_sum = np.zeros(1760)
 specs_sum_squares = np.zeros(1760)
 for spec in specs:
@@ -41,8 +41,11 @@ for spec in specs:
 specs_mean = specs_sum / len(specs)
 specs_mean_squares = specs_sum_squares / len(specs)
 
-for spec in specs:
-    pylab.plot(spec[1])
+sigma = np.sqrt(specs_mean_squares - specs_mean**2)
+
+#Make something pretty!
+#for spec in specs:
+#    pylab.plot(spec[1])
 
 pylab.plot(specs_mean)
 
